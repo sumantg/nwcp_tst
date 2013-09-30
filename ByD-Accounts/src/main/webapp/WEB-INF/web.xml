@@ -27,6 +27,22 @@
 		<url-pattern>/proxy/my307220__public/*</url-pattern>
 		<url-pattern>/proxy/yourDestinationName2/*</url-pattern>
 	</servlet-mapping>
+
+	<servlet>
+		<display-name>SSLTest</display-name>
+		<servlet-name>SSLTest</servlet-name>
+		<servlet-class>au.gov.redback.common.connectivity.proxy.SSLTest</servlet-class>
+	</servlet>
+	<servlet-mapping>
+			<servlet-name>SSLTest</servlet-name>
+		
+		<!-- ============================================================== -->
+		<!-- Replace yourDestinationName1 with real destination name  -->
+		<!-- Add additional <url-pattern> for more destinations  -->
+		<!-- ============================================================== -->
+		
+		<url-pattern>/ssltest/*</url-pattern>
+	</servlet-mapping>
 	
 	<!-- ============================================================== -->
 	<!-- Destination access can be further restricted with roles -->
@@ -52,6 +68,7 @@
 	<resource-ref>
 		<res-ref-name>connectivity/DestinationFactory</res-ref-name>
 		<res-type>com.sap.core.connectivity.api.DestinationFactory</res-type>
+		<res-auth>Application</res-auth>
 	</resource-ref>
 	<!-- ============================================================== -->
 	<!-- JNDI resource definition of DestinationFactory -->
@@ -59,7 +76,17 @@
   <resource-ref>
     <res-ref-name>my307220__public</res-ref-name>
     <res-type>com.sap.core.connectivity.api.http.HttpDestination</res-type>
+    <res-auth>Application</res-auth>
   </resource-ref>
+	<!-- ============================================================== -->
+	<!-- JNDI resource definition of KeyStoreService -->
+	<!-- ============================================================== -->
+  <resource-ref>
+    <res-ref-name>KeyStoreService</res-ref-name>
+    <res-type>com.sap.cloud.crypto.keystore.api.KeyStoreService</res-type>
+    <res-auth>Application</res-auth>
+  </resource-ref>
+  
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>

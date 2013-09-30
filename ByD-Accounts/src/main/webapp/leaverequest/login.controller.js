@@ -64,7 +64,7 @@ sap.ui.controller("leaverequest.login", {
   //      params[gadgets.io.RequestParameters.HEADERS]={"SOAPAction":"http://sap.com/xi/A1S/Global/QueryCustomerIn/FindByElementsRequest",                                                                             "Content-Type":"application/soap+xml; charset=UTF-8"};
         //var URL="https://my307220.sapbydesign.com/sap/bc/srt/scs/sap/querycustomerin1?sap-vhost=my307220.sapbydesign.com";
         var URL="/ByD-Accounts/proxy/my307220__public/sap/bc/srt/scs/sap/querycustomerin1?sap-vhost=my307220.sapbydesign.com";
-    	
+        //var URL="/ByD-Accounts/ssltest/testme";
     	
     	
     	

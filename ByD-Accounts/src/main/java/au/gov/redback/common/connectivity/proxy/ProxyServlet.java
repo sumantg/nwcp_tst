@@ -24,6 +24,7 @@ import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -57,6 +58,7 @@ import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
+import org.apache.http.conn.scheme.SchemeSocketFactory;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -68,6 +70,7 @@ import com.sap.core.connectivity.api.DestinationException;
 import com.sap.core.connectivity.api.DestinationFactory;
 import com.sap.core.connectivity.api.http.HttpDestination;
 
+import com.sap.cloud.crypto.keystore.api.*;
 /**
  * This servlet is used as connectivity proxy between a consuming agent, like a Web browser
  * application, and a backend service and can be seen as an add-on of the SAP HANA Cloud 
@@ -228,7 +231,8 @@ public class ProxyServlet extends HttpServlet {
                          while(i<sz)
                          {
                         	 String sch = (String)sr.getSchemeNames().iterator().next();
-                        	 LOGGER.debug("setSecuredHttpClient: Scheme Name:" + sch );
+                        	 LOGGER.debug("NWCP: setSecuredHttpClient: Scheme Name:" + sch );
+                        	 sr.unregister("https");
                         	 i++;
 //                 			break;
                          }
@@ -621,5 +625,50 @@ public class ProxyServlet extends HttpServlet {
 		b.append("\n==> /<context-path>/proxy/<destination-name>/<relative-path-below-destination-target>");
 		b.append("\n");
 		return b.toString();
+	}
+
+	private HttpClient setSecuredHttpClient2(HttpClient httpClient) throws Exception 
+	{
+	   ClientConnectionManager ccm = httpClient.getConnectionManager();
+	
+	   // get Keystore Service
+	   KeyStoreService keystoreService;
+	   //try {
+	          Context context = new InitialContext();
+	          keystoreService = (KeyStoreService) context.lookup("java:comp/env/KeyStoreService");
+	     //   } 
+	   //catch (Exception e) 
+	   if(keystoreService == null){
+		   LOGGER.debug("KeyStoreService: Not Found");
+		  return httpClient;
+//	                           throw new ServletException(e);
+	   }
+
+	   String trustedCAKeystoreName = "hanacloud";
+
+	   // get a named keystore without integrity check
+	   KeyStore trustedCAKeystore;
+	   try {
+	      	 	trustedCAKeystore = keystoreService.getKeyStore(trustedCAKeystoreName, new String("Redback1").toCharArray());
+	     	   try 
+	    	   {
+	    	   	    SchemeSocketFactory socketFactory = new SSLSocketFactory(null, null, trustedCAKeystore);
+	    	        Scheme sch = new Scheme("https", Integer.parseInt("443"), socketFactory);
+	    	   	    httpClient.getConnectionManager().getSchemeRegistry().register(sch);
+	    	   } 
+	    	   catch (Exception e) 
+	    	   {
+	    		   LOGGER.debug("KeyStoreService:" + e.getMessage());
+	    	   }
+
+	   } 
+	   catch (Exception e) 
+	   {
+		   LOGGER.debug("TrustedCAkeyStore:" + trustedCAKeystoreName + "Not Found" + e.getMessage());
+	   }  
+	   return httpClient;                   
+	   //}	                         
+		//}
+	                         
 	}
 }
