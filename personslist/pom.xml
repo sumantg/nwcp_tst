@@ -18,22 +18,24 @@
 		-Dhttps.proxyHost=${proxy.host} -Dhttps.proxyPort=${proxy.port}</browser.proxy.settings>
 <!-- Properties that hold information on the location and version of the SAP HANA Cloud
 			SDK -->
-	<sap.cloud.sdk.version>1.29.18.1</sap.cloud.sdk.version>
+			
+			
+	<sap.cloud.sdk.version>1.35.12.4</sap.cloud.sdk.version>
 	<sap.cloud.sdk.path>E:/dev/hanacloud.sdk/${sap.cloud.sdk.version}</sap.cloud.sdk.path>
 	<persistence.osgi.hdb.platform.version>0.6.11</persistence.osgi.hdb.platform.version>
 <!-- Properties needed to reference sapui5 -->
-	<sap.cloud.ui5.version>1.12.1</sap.cloud.ui5.version>
-	<eclipse.path>E:/Dump/software/Eclipse/eclipse</eclipse.path>
+	<sap.cloud.ui5.version>1.12.7</sap.cloud.ui5.version>
+	<eclipse.path>E:/Dump/software/EclipseJuno422/eclipse</eclipse.path>
 <!-- Properties that hold the local server information required for local
 	integration testing -->
 	<local.server.root>${project.build.directory}/server</local.server.root>
 	<local.server.host>localhost</local.server.host>
   </properties>
   <modules>
-<!-- 
-	<module>personslist-model-jpa</module>
+
+	<module>personlist-model-jpa</module>
 	<module>personslist-web</module>
--->
+
   </modules>
 <dependencies>
 <!-- Test dependencies -->
